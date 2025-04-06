@@ -1,16 +1,15 @@
-"use client"
-import { useState } from "react";
-import Link from "next/link"
-import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { EventCard } from "./event-card"
-import { SiteHeader } from "@/components/site-header"
-import { ImageGallery } from "@/components/image-gallery"
+"use client";
 
-export default function EventsPage() {
-  
+import { useState } from "react";
+import Link from "next/link";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EventCard } from "./event-card";
+import { SiteHeader } from "@/components/site-header";
+import { ImageGallery } from "@/components/image-gallery";
+
 export default function EventsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("all");
@@ -47,7 +46,7 @@ export default function EventsPage() {
 
     setFilteredEvents(filtered);
   };
-  
+
   const campusImages = [
     {
       url: "/images/f5.jpg",
@@ -59,7 +58,7 @@ export default function EventsPage() {
       alt: "Students socializing at a campus event",
       caption: "Making connections at campus events",
     },
-  ]
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -86,8 +85,7 @@ export default function EventsPage() {
                 <h2 className="mb-4 font-semibold">Filters</h2>
                 <div className="space-y-4">
                   <div>
-                    
-                  <label className="mb-2 block text-sm font-medium">Search</label>
+                    <label className="mb-2 block text-sm font-medium">Search</label>
                     <div className="relative">
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <Input
@@ -163,7 +161,7 @@ export default function EventsPage() {
                 </Select>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredEvents.map((event) => (
+                {filteredEvents.map((event) => (
                   <EventCard
                     key={event.id}
                     id={event.id}
@@ -179,6 +177,9 @@ export default function EventsPage() {
                   />
                 ))}
               </div>
+            
+
+
               <div className="mt-8 flex justify-center">
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="icon" disabled>
