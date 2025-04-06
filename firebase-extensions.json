@@ -1,0 +1,29 @@
+{
+  "extensions": [
+    {
+      "name": "storage-resize-images",
+      "params": {
+        "IMG_SIZES": "[240, 480, 720, 960, 1200]",
+        "IMG_FORMATS": "webp",
+        "DELETE_ORIGINAL_FILE": "false",
+        "MAKE_PUBLIC": "true"
+      }
+    },
+    {
+      "name": "firestore-send-email",
+      "params": {
+        "SMTP_CONNECTION_URI": "${SMTP_URI}",
+        "SMTP_PASSWORD": "${SMTP_PASSWORD}",
+        "DEFAULT_FROM": "noreply@nileuniversity.edu",
+        "DEFAULT_REPLY_TO": "support@nileuniversity.edu"
+      }
+    },
+    {
+      "name": "firestore-counter",
+      "params": {
+        "collection_path": "events"
+      }
+    }
+  ]
+}
+
