@@ -1,3 +1,5 @@
+"use client"
+import { useState } from "react";
 import Link from "next/link"
 import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,6 +10,44 @@ import { SiteHeader } from "@/components/site-header"
 import { ImageGallery } from "@/components/image-gallery"
 
 export default function EventsPage() {
+  
+export default function EventsPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [category, setCategory] = useState("all");
+  const [dateRange, setDateRange] = useState("upcoming");
+  const [location, setLocation] = useState("all");
+  const [filteredEvents, setFilteredEvents] = useState(events);
+
+  const handleApplyFilters = () => {
+    const now = new Date();
+    const filtered = events.filter((event) => {
+      const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = category === "all" || event.category.toLowerCase() === category;
+      const matchesLocation = location === "all" || event.location.toLowerCase().includes(location.replace("-", " "));
+      
+      const eventDate = new Date(event.date);
+      let matchesDate = true;
+
+      if (dateRange === "today") {
+        matchesDate = eventDate.toDateString() === now.toDateString();
+      } else if (dateRange === "this-week") {
+        const endOfWeek = new Date(now);
+        endOfWeek.setDate(now.getDate() + (7 - now.getDay()));
+        matchesDate = eventDate >= now && eventDate <= endOfWeek;
+      } else if (dateRange === "this-month") {
+        matchesDate = eventDate.getMonth() === now.getMonth() && eventDate.getFullYear() === now.getFullYear();
+      } else if (dateRange === "past") {
+        matchesDate = eventDate < now;
+      } else {
+        matchesDate = eventDate >= now;
+      }
+
+      return matchesSearch && matchesCategory && matchesLocation && matchesDate;
+    });
+
+    setFilteredEvents(filtered);
+  };
+  
   const campusImages = [
     {
       url: "/images/f5.jpg",
@@ -46,15 +86,22 @@ export default function EventsPage() {
                 <h2 className="mb-4 font-semibold">Filters</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium">Search</label>
+                    
+                  <label className="mb-2 block text-sm font-medium">Search</label>
                     <div className="relative">
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <Input type="search" placeholder="Search events..." className="pl-8" />
+                      <Input
+                        type="search"
+                        placeholder="Search for an event..."
+                        className="pl-8"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium">Category</label>
-                    <Select defaultValue="all">
+                    <label className="mb-2 block text-sm font-medium">Event Type</label>
+                    <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -69,7 +116,7 @@ export default function EventsPage() {
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium">Date Range</label>
-                    <Select defaultValue="upcoming">
+                    <Select value={dateRange} onValueChange={setDateRange}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select date range" />
                       </SelectTrigger>
@@ -84,7 +131,7 @@ export default function EventsPage() {
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium">Location</label>
-                    <Select defaultValue="all">
+                    <Select value={location} onValueChange={setLocation}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
@@ -97,7 +144,7 @@ export default function EventsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="w-full">Apply Filters</Button>
+                  <Button className="w-full" onClick={handleApplyFilters}>Filter Events</Button>
                 </div>
               </div>
             </div>
@@ -116,7 +163,7 @@ export default function EventsPage() {
                 </Select>
               </div>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {events.map((event) => (
+              {filteredEvents.map((event) => (
                   <EventCard
                     key={event.id}
                     id={event.id}
@@ -186,7 +233,7 @@ export default function EventsPage() {
       <footer className="border-t bg-background">
         <div className="container flex flex-col gap-6 py-8 md:flex-row md:items-center md:justify-between md:py-12">
           <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-bold">Nile University Events</h3>
+            <h3 className="text-lg font-bold">Nile EngageU</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Connecting students with campus activities and opportunities.
             </p>
